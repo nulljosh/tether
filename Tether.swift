@@ -1,6 +1,8 @@
 // Tether: reconnects the paired Bluetooth mouse with no pointer needed.
 // Open it from Spotlight, it connects on its own, Return closes it. Build: ./build.sh
+import CoreBluetooth
 import IOBluetooth
+import IOKit
 import SwiftUI
 
 @main struct TetherApp: App {
@@ -29,15 +31,46 @@ final class Delegate: NSObject, NSApplicationDelegate {
 }
 
 @MainActor @Observable final class Mouse {
-    enum State { case connecting, connected, missing, bluetoothOff }
+    enum State { case connecting, connected, missing, noMouse, bluetoothOff, noAccess }
     var state = State.connecting
-    var name = "Mouse"
+    var name = "your mouse"
     private var loop: Task<Void, Never>?
+    private static let defaults = UserDefaults.standard
 
-    // ponytail: matches by name. Re-pairing gives the mouse a new address, so every paired one gets tried at once.
+    // BLE devices report no device class to IOBluetooth, so Tether learns pointers by name from the HID registry while
+    // they are connected. Re-pairing changes a mouse's address but never its name. Reading the registry needs no permission.
+    private static func connectedPointerNames() -> Set<String> {
+        var names = Set<String>()
+        for (page, usage) in [(1, 2), (0x0D, 0x05)] { // mouse, touchpad
+            let match = IOServiceMatching("IOHIDDevice") as NSMutableDictionary
+            match["PrimaryUsagePage"] = page
+            match["PrimaryUsage"] = usage
+            var it: io_iterator_t = 0
+            guard IOServiceGetMatchingServices(kIOMainPortDefault, match, &it) == KERN_SUCCESS else { continue }
+            defer { IOObjectRelease(it) }
+            while case let s = IOIteratorNext(it), s != 0 {
+                defer { IOObjectRelease(s) }
+                let prop = { (key: String) in IORegistryEntryCreateCFProperty(s, key as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? String }
+                if prop("Transport")?.hasPrefix("Bluetooth") == true, let n = prop("Product") { names.insert(n) }
+            }
+        }
+        return names
+    }
+
+    private static var known: Set<String> { Set(defaults.stringArray(forKey: "pointers") ?? []) }
+
+    private static func remember() {
+        let seen = connectedPointerNames()
+        if !seen.isSubset(of: known) { defaults.set(known.union(seen).sorted(), forKey: "pointers") }
+    }
+
+    // Every paired pointer, old addresses included, so they can all be tried at once.
     private static func mice() -> [IOBluetoothDevice] {
-        (IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] ?? [])
-            .filter { ($0.name ?? "").localizedCaseInsensitiveContains("mouse") }
+        let known = known
+        return (IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] ?? []).filter {
+            let n = $0.name ?? ""
+            return known.contains(n) || ["mouse", "trackpad"].contains { n.localizedCaseInsensitiveContains($0) }
+        }
     }
 
     private static var connected: IOBluetoothDevice? { mice().first { $0.isConnected() } }
@@ -46,6 +79,7 @@ final class Delegate: NSObject, NSApplicationDelegate {
         loop?.cancel()
         loop = Task {
             while !Task.isCancelled {
+                Self.remember()
                 if let m = Self.connected {
                     name = m.name ?? name
                     state = .connected
@@ -58,12 +92,14 @@ final class Delegate: NSObject, NSApplicationDelegate {
     }
 
     private func attempt() async {
+        if [.denied, .restricted].contains(CBManager.authorization) { state = .noAccess; return }
         guard IOBluetoothHostController.default()?.powerState == kBluetoothHCIPowerStateON else {
             state = .bluetoothOff
             return
         }
         let all = Self.mice()
-        if let first = all.first { name = first.name ?? name }
+        guard let first = all.first else { state = .noMouse; return }
+        name = first.name ?? name
         if state != .missing { state = .connecting }
         // openConnection blocks for ~15s on a dead address, so each one runs on its own thread.
         for address in all.compactMap(\.addressString) {
@@ -130,6 +166,8 @@ struct ContentView: View {
         switch mouse.state {
         case .connected: "checkmark"
         case .bluetoothOff: "antenna.radiowaves.left.and.right.slash"
+        case .noAccess: "hand.raised.fill"
+        case .noMouse: "computermouse"
         default: "computermouse.fill"
         }
     }
@@ -137,8 +175,8 @@ struct ContentView: View {
     private var tint: Color {
         switch mouse.state {
         case .connected: .brand
-        case .missing, .bluetoothOff: .orange
-        case .connecting: .secondary
+        case .missing, .bluetoothOff, .noAccess: .orange
+        case .connecting, .noMouse: .secondary
         }
     }
 
@@ -148,6 +186,8 @@ struct ContentView: View {
         case .connected: "Connected"
         case .missing: "Mouse Not Responding"
         case .bluetoothOff: "Bluetooth Is Off"
+        case .noMouse: "No Mouse Yet"
+        case .noAccess: "Bluetooth Access Is Off"
         }
     }
 
@@ -155,21 +195,25 @@ struct ContentView: View {
         switch mouse.state {
         case .connecting: "Looking for \(mouse.name)."
         case .connected: "\(mouse.name) is ready to go."
-        case .missing: "Flip the switch underneath off and on. Tether keeps trying."
+        case .missing: "Turn \(mouse.name) off and on. Tether keeps trying."
         case .bluetoothOff: "Turn on Bluetooth to connect \(mouse.name)."
+        case .noMouse: "Pair your mouse once in Bluetooth settings. Tether remembers it after that."
+        case .noAccess: "Let Tether use Bluetooth in Privacy & Security to reach your mouse."
         }
     }
 
     private var buttonTitle: String {
         switch mouse.state {
         case .connecting, .connected: "Done"
-        case .missing, .bluetoothOff: "Open Bluetooth Settings"
+        case .missing, .bluetoothOff, .noMouse: "Open Bluetooth Settings"
+        case .noAccess: "Open Privacy Settings"
         }
     }
 
     private func primary() {
         if mouse.state == .connected { return quit() }
-        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.BluetoothSettings")!)
+        let pane = mouse.state == .noAccess ? "com.apple.preference.security?Privacy_Bluetooth" : "com.apple.BluetoothSettings"
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:\(pane)")!)
     }
 
     private func quit() { NSApp.terminate(nil) }

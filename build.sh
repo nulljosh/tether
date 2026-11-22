@@ -1,5 +1,6 @@
 #!/bin/sh
 # Builds Tether and installs it to /Applications.
+# ./build.sh release also notarizes it and publishes Tether.zip as a GitHub release for the version in the plist.
 set -e
 cd "$(dirname "$0")"
 OUT="build/Tether.app"
@@ -28,7 +29,16 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
 </dict></plist>
 EOF
 # Developer ID keeps the Bluetooth permission across rebuilds; ad-hoc asks again every build.
-codesign -f -o runtime -s "Developer ID Application: Joshua Trommel (QMM486NPYC)" "$OUT"
+codesign -f -o runtime --timestamp -s "Developer ID Application: Joshua Trommel (QMM486NPYC)" "$OUT"
 rm -rf "/Applications/Tether.app" "/Applications/Connect Mouse.app"
 cp -R "$OUT" "/Applications/Tether.app"
 echo "Installed /Applications/Tether.app"
+
+[ "$1" = release ] || exit 0
+VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$OUT/Contents/Info.plist")
+ditto -c -k --keepParent "$OUT" build/Tether.zip
+asc notarization submit --file build/Tether.zip --wait --poll-interval 20s --timeout 30m
+xcrun stapler staple "$OUT"
+rm build/Tether.zip && ditto -c -k --keepParent "$OUT" build/Tether.zip
+spctl -a -vv "$OUT"
+gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later."

@@ -10,13 +10,17 @@ A Bluetooth mouse goes quiet and the keyboard is all you have left. Open Tether 
 
 ## Get it
 
-Live at [tether.jaybulb.com](https://tether.jaybulb.com). Build it yourself with `./build.sh`. It needs macOS 26 and Xcode 26.
+[Download Tether.zip](https://github.com/nulljosh/tether/releases/latest/download/Tether.zip), unzip, drag Tether to Applications. Signed and notarized, macOS 26 or later. Site: [tether.jaybulb.com](https://tether.jaybulb.com).
+
+Or build it: `./build.sh` (needs Xcode 26).
 
 ## Features
 
 No pointer needed. Tether starts connecting the moment it opens, and every button has a key. Return closes it, Escape too.
 
 It never freezes. Each saved address gets its own thread, so a dead one can't hold up the live one. Most reconnects land in a second or two.
+
+It knows your mouse. Any Bluetooth mouse or trackpad it sees connected, Tether remembers by name, so it finds it again after you re-pair.
 
 It keeps trying. Leave it open and it watches the mouse. If the mouse drops again, Tether picks it right back up.
 
