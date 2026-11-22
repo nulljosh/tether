@@ -12,6 +12,13 @@ import SwiftUI
     }
 }
 
+// Tether Sans and Tether Display ship in Resources/Fonts (ATSApplicationFontsPath); scripts/gen_font.py makes them.
+extension Font {
+    static let heading = Font.custom("TetherDisplay-Bold", size: 22, relativeTo: .title2)
+    static let detail = Font.custom("TetherSans-Regular", size: 13, relativeTo: .callout)
+    static let button = Font.custom("TetherSans-Semibold", size: 15, relativeTo: .body)
+}
+
 extension Color {
     static let brand = Color(red: 0x16 / 255, green: 0x99 / 255, blue: 0x4a / 255)
 }
@@ -85,11 +92,11 @@ struct ContentView: View {
                 .padding(.bottom, 20)
 
             Text(title)
-                .font(.title2.weight(.semibold))
+                .font(.heading)
                 .padding(.bottom, 6)
 
             Text(subtitle)
-                .font(.callout)
+                .font(.detail)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
@@ -97,7 +104,7 @@ struct ContentView: View {
                 .padding(.bottom, 24)
 
             Button(action: primary) {
-                Text(buttonTitle).frame(maxWidth: .infinity)
+                Text(buttonTitle).font(.button).frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)

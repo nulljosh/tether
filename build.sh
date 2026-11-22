@@ -4,7 +4,8 @@ set -e
 cd "$(dirname "$0")"
 OUT="build/Tether.app"
 rm -rf build
-mkdir -p "$OUT/Contents/MacOS" "$OUT/Contents/Resources"
+mkdir -p "$OUT/Contents/MacOS" "$OUT/Contents/Resources/Fonts"
+cp fonts/*.ttf fonts/OFL.txt "$OUT/Contents/Resources/Fonts/"
 swiftc -O -parse-as-library -target arm64-apple-macos26.0 Tether.swift -o "$OUT/Contents/MacOS/Tether"
 xcrun actool Tether.icon --compile "$OUT/Contents/Resources" --app-icon Tether --platform macosx \
   --minimum-deployment-target 26.0 --output-partial-info-plist build/icon.plist >/dev/null
@@ -21,6 +22,7 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>1.0</string>
   <key>CFBundleVersion</key><string>1</string>
+  <key>ATSApplicationFontsPath</key><string>Fonts</string>
   <key>LSMinimumSystemVersion</key><string>26.0</string>
   <key>NSBluetoothAlwaysUsageDescription</key><string>Tether uses Bluetooth to reconnect your mouse.</string>
 </dict></plist>
