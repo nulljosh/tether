@@ -15,4 +15,4 @@ Compared against ToothFairy, AirBuddy, AllMyBatteries and Bluetooth Battery Moni
 Skipped: battery level (macOS keeps a BLE mouse's battery private), widgets, history charts, iCloud sync.
 
 ## Then
-Run the `apple` skill's checks over every state (connecting, connected, not responding, Bluetooth off) in light and dark. Notarize and attach a signed zip to a GitHub release so people can download instead of building.
+Run the `apple` skill's checks over every state (connecting, connected, not responding, Bluetooth off) in light and dark.
