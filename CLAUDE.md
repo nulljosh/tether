@@ -6,7 +6,7 @@ Reconnects a paired Bluetooth mouse from the keyboard alone. A universal Mac app
 - `Tether.swift`: the whole app. Plain AppKit (no SwiftUI, no async runtime) so it runs back to 10.15, IOBluetooth, no dependencies. `Mouse` owns the connect loop on one coalescing Timer, `Controller` draws the one screen, `Badge` hand-draws the glyphs.
 - `build.sh`: swiftc twice (arm64 macOS 11, x86_64 macOS 10.15) + lipo, actool (icon), codesign, install. No Xcode project, no xcodegen.
 - `web/`: the landing, static assets on a Cloudflare Worker (`wrangler.toml`, `[assets] directory = "web"`).
-- `brand/`, `Tether.icon`, `icon.svg`: made by the `/brand` skill. Accent `#16994a`, gradient top `#34c759`.
+- `brand/`, `Tether.icon`, `icon.svg`: made by the `/brand` skill. Accent `#0b66e4`, gradient top `#4cb0ff`.
 
 ## Build and deploy
 ```bash

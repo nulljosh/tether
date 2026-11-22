@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Helvetica, Arial, sans-serif">
   <style>
     .box { fill: #f5f5f7; stroke: rgba(60,60,67,.18); }
-    .hot { fill: #16994a; }
+    .hot { fill: #0b66e4; }
     .t { font-size: 15px; font-weight: 600; fill: #1d1d1f; }
     .s { font-size: 12px; fill: #6e6e73; }
     .w { font-size: 15px; font-weight: 600; fill: #fff; }

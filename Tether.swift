@@ -8,7 +8,7 @@ import IOBluetooth
 import IOKit
 import ServiceManagement
 
-let brand = NSColor(srgbRed: 0x16 / 255, green: 0x99 / 255, blue: 0x4a / 255, alpha: 1)
+let brand = NSColor(srgbRed: 0x0b / 255, green: 0x66 / 255, blue: 0xe4 / 255, alpha: 1)
 
 // MARK: - The mouse
 
