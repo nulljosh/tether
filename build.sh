@@ -7,9 +7,12 @@ OUT="build/Tether.app"
 rm -rf build
 mkdir -p "$OUT/Contents/MacOS" "$OUT/Contents/Resources/Fonts"
 cp fonts/*.ttf fonts/OFL.txt "$OUT/Contents/Resources/Fonts/"
-swiftc -O -parse-as-library -target arm64-apple-macos26.0 Tether.swift -o "$OUT/Contents/MacOS/Tether"
+# Universal: Apple silicon from macOS 11, Intel from 10.15 (the oldest with Swift and CBManager.authorization built in).
+swiftc -O -target arm64-apple-macos11.0 Tether.swift -o build/Tether-arm64
+swiftc -O -target x86_64-apple-macos10.15 Tether.swift -o build/Tether-x86_64
+lipo -create build/Tether-arm64 build/Tether-x86_64 -output "$OUT/Contents/MacOS/Tether"
 xcrun actool Tether.icon --compile "$OUT/Contents/Resources" --app-icon Tether --platform macosx \
-  --minimum-deployment-target 26.0 --output-partial-info-plist build/icon.plist >/dev/null
+  --minimum-deployment-target 10.15 --output-partial-info-plist build/icon.plist >/dev/null
 cat > "$OUT/Contents/Info.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -21,10 +24,10 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
   <key>CFBundleIconFile</key><string>Tether</string>
   <key>CFBundleIconName</key><string>Tether</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.0.1</string>
-  <key>CFBundleVersion</key><string>2</string>
+  <key>CFBundleShortVersionString</key><string>1.1.0</string>
+  <key>CFBundleVersion</key><string>3</string>
   <key>ATSApplicationFontsPath</key><string>Fonts</string>
-  <key>LSMinimumSystemVersion</key><string>26.0</string>
+  <key>LSMinimumSystemVersion</key><string>10.15</string>
   <key>NSBluetoothAlwaysUsageDescription</key><string>Tether uses Bluetooth to reconnect your mouse.</string>
 </dict></plist>
 EOF
@@ -54,5 +57,5 @@ asc notarization submit --file build/Tether.zip --wait --poll-interval 20s --tim
 xcrun stapler staple "$OUT"
 rm build/Tether.zip && ditto -c -k --keepParent "$OUT" build/Tether.zip
 spctl -a -vv "$OUT"
-gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later." --generate-notes --target "$(git rev-parse HEAD)" 2>/dev/null \
+gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 10.15 or later, Intel and Apple silicon." --generate-notes --target "$(git rev-parse HEAD)" 2>/dev/null \
   || { [ -n "$REPLACE" ] && gh release upload "v$VERSION" build/Tether.zip --clobber; }

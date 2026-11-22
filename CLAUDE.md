@@ -1,10 +1,10 @@
 # Tether
 
-Reconnects a paired Bluetooth mouse from the keyboard alone. A Mac app (`/Applications/Tether.app`) plus a landing at `tether.jaybulb.com`. No App Store listing.
+Reconnects a paired Bluetooth mouse from the keyboard alone. A universal Mac app (macOS 10.15 Intel, 11 Apple silicon) (`/Applications/Tether.app`) plus a landing at `tether.jaybulb.com`. No App Store listing.
 
 ## Stack
-- `Tether.swift`: the whole app. SwiftUI window, IOBluetooth, no dependencies. `Mouse` owns the connect loop, `ContentView` is the one screen.
-- `build.sh`: swiftc + actool (icon) + codesign + install. No Xcode project, no xcodegen.
+- `Tether.swift`: the whole app. Plain AppKit (no SwiftUI, no async runtime) so it runs back to 10.15, IOBluetooth, no dependencies. `Mouse` owns the connect loop on one coalescing Timer, `Controller` draws the one screen, `Badge` hand-draws the glyphs.
+- `build.sh`: swiftc twice (arm64 macOS 11, x86_64 macOS 10.15) + lipo, actool (icon), codesign, install. No Xcode project, no xcodegen.
 - `web/`: the landing, static assets on a Cloudflare Worker (`wrangler.toml`, `[assets] directory = "web"`).
 - `brand/`, `Tether.icon`, `icon.svg`: made by the `/brand` skill. Accent `#16994a`, gradient top `#34c759`.
 
