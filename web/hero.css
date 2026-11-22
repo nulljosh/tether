@@ -1,0 +1,49 @@
+/* Hero, after Keyrate: one scene in Tether's own objects. The Tether window lies on the desk under the title and
+   reconnects, over and over. Loose keycaps drift around it at three depths: the keys you press to use it, and the
+   mouse and Bluetooth marks. hero.js moves every layer at its own scroll speed. Mobile first. */
+.lp-hero { isolation: isolate; overflow: hidden; justify-content: flex-start; min-height: 0;
+           padding: 104px 20px clamp(320px, 70vw, 540px); --k: 44px; }
+.lp-hero .hero-copy { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+
+/* the ground: the app, tilted onto the desk, feathered at the edges */
+.backdrop { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+            -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+.ground { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; will-change: transform; }
+.ground .win { transform: perspective(1200px) rotateX(38deg) scale(1.25); transform-origin: 50% 100%; margin-bottom: -72px; opacity: .85; }
+
+/* the sky: loose keycaps at three depths */
+.sky { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
+       -webkit-mask-image: linear-gradient(#000 55%, transparent 85%); mask-image: linear-gradient(#000 55%, transparent 85%); }
+.sky .layer { position: absolute; inset: 0; will-change: transform; }
+.cap { position: absolute; display: grid; place-items: center; width: var(--s); height: var(--s); border-radius: calc(var(--s) * .22);
+       background: var(--bg2); border: 1px solid var(--border); box-shadow: 0 calc(var(--s) * .06) 0 var(--border);
+       color: var(--text3); font-weight: 600; font-size: calc(var(--s) * .4); user-select: none;
+       animation: drift ease-in-out infinite alternate; }
+.cap.wide { width: calc(var(--s) * 2.4); font-size: calc(var(--s) * .26); }
+.cap svg { width: 52%; height: 52%; }
+.cap.lit { color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+.sky .far .cap { opacity: .5; }
+.sky .near .cap { filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .12)); }
+@keyframes drift { from { transform: translateY(-10px) rotate(var(--r)); } to { transform: translateY(10px) rotate(calc(var(--r) + 8deg)); } }
+@media (prefers-reduced-motion: reduce) { .cap { animation: none; } }
+#lp-bg { display: none; } /* the shared bars field; this scene replaces it */
+
+/* type: the display cut for the headline, one scale step between lines */
+.lp-hero h1 { font-size: clamp(2.6rem, 9vw, 5.25rem); letter-spacing: -.03em; line-height: 1.02; margin-top: 24px; max-width: 12ch; }
+.lp-hero .lp-lede { font-size: clamp(1.0625rem, 1.6vw, 1.25rem); margin-top: 18px; max-width: 34ch; }
+.lp-hero .lp-cta { margin-top: 28px; }
+.lp-hero .lp-btn { padding: 12px 22px; font-size: 1rem; font-weight: 600; }
+
+/* the keys, typed: Command Space, tether, Return */
+.typed { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; height: 32px; font-size: .9375rem; color: var(--text2); }
+.typed kbd { font: inherit; font-size: .8125rem; font-weight: 600; padding: 3px 9px; border-radius: 8px; background: var(--bg2);
+             border: 1px solid var(--border); box-shadow: 0 2px 0 var(--border); color: var(--text2); transition: background .1s, color .1s, translate .1s, box-shadow .1s; }
+.typed kbd.down { translate: 0 2px; box-shadow: none; background: var(--accent); border-color: var(--accent); color: #fff; }
+.typed .q { min-width: 4.2ch; text-align: left; color: var(--text); font-weight: 500; }
+.typed .q::after { content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 1px; vertical-align: -.15em; background: var(--accent); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (min-width: 720px) {
+  .lp-hero { padding-top: clamp(96px, 14vh, 152px); padding-bottom: 470px; --k: 56px; }
+  .ground .win { transform: perspective(1800px) rotateX(40deg) scale(2.1); margin-bottom: -150px; }
+}

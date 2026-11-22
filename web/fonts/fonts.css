@@ -1,0 +1,8 @@
+/* Tether Sans and Tether Display: Inter's text and display cuts (OFL 1.1, see OFL.txt), renamed. scripts/gen_font.py */
+@font-face { font-family: "Tether Sans"; src: url("/fonts/TetherSans-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Tether Sans"; src: url("/fonts/TetherSans-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Tether Sans"; src: url("/fonts/TetherSans-Semibold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Tether Sans"; src: url("/fonts/TetherSans-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Tether Display"; src: url("/fonts/TetherDisplay.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+body, button, input { font-family: "Tether Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+h1, h2, .display { font-family: "Tether Display", "Tether Sans", -apple-system, BlinkMacSystemFont, sans-serif; }
