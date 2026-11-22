@@ -36,6 +36,14 @@ if (typed) {
   })();
 }
 
+// Fade sections up as they scroll in (first-party, so the page never depends on another site's script to show).
+const reveals = document.querySelectorAll('.lp-reveal');
+if (still || !('IntersectionObserver' in window)) reveals.forEach((e) => e.classList.add('lp-in'));
+else {
+  const ro = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('lp-in'); ro.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach((e) => ro.observe(e));
+}
+
 // The demo: connects once when it scrolls in, then again on every drop.
 let timer;
 const drop = (e) => { e?.preventDefault(); clearTimeout(timer); set(live, 'connecting'); timer = setTimeout(() => set(live, 'connected'), 1400); };

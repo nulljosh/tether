@@ -31,10 +31,13 @@ EOF
 # Developer ID keeps the Bluetooth permission across rebuilds; ad-hoc asks again every build.
 # CI has no signing identity, so it signs ad-hoc and stops before installing.
 ID="Developer ID Application: Joshua Trommel (QMM486NPYC)"
-if security find-identity -v -p codesigning | grep -q "$ID"; then
+if security find-identity -v -p codesigning | grep -qF "$ID"; then
   codesign -f -o runtime --timestamp -s "$ID" "$OUT"
-else
+elif [ -n "$CI" ]; then
   codesign -f -s - "$OUT"
+else
+  echo "No Developer ID in the keychain (locked?). Refusing to install an ad-hoc build: it would lose the Bluetooth grant." >&2
+  exit 1
 fi
 [ -n "$CI" ] && { echo "Built $OUT"; exit 0; }
 rm -rf "/Applications/Tether.app" "/Applications/Connect Mouse.app"
@@ -43,9 +46,13 @@ echo "Installed /Applications/Tether.app"
 
 [ "$1" = release ] || exit 0
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$OUT/Contents/Info.plist")
+# A version ships once. Bump CFBundleShortVersionString for a new release; REPLACE=1 swaps the zip on purpose.
+if gh release view "v$VERSION" >/dev/null 2>&1 && [ -z "$REPLACE" ]; then echo "v$VERSION is already released. Bump the version." >&2; exit 1; fi
+[ -z "$(git status --porcelain)" ] || { echo "Commit first, so the tag matches what was built." >&2; exit 1; }
 ditto -c -k --keepParent "$OUT" build/Tether.zip
 asc notarization submit --file build/Tether.zip --wait --poll-interval 20s --timeout 30m
 xcrun stapler staple "$OUT"
 rm build/Tether.zip && ditto -c -k --keepParent "$OUT" build/Tether.zip
 spctl -a -vv "$OUT"
-gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later." || gh release upload "v$VERSION" build/Tether.zip --clobber
+gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later." --target "$(git rev-parse HEAD)" 2>/dev/null \
+  || { [ -n "$REPLACE" ] && gh release upload "v$VERSION" build/Tether.zip --clobber; }

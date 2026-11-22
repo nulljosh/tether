@@ -3,6 +3,7 @@
 import CoreBluetooth
 import IOBluetooth
 import IOKit
+import os
 import SwiftUI
 
 @main struct TetherApp: App {
@@ -36,6 +37,8 @@ final class Delegate: NSObject, NSApplicationDelegate {
     var name = "your mouse"
     private var loop: Task<Void, Never>?
     private static let defaults = UserDefaults.standard
+    // Addresses with an openConnection still blocking, so a missing mouse never piles up threads.
+    private nonisolated static let inFlight = OSAllocatedUnfairLock(initialState: Set<String>())
 
     // BLE devices report no device class to IOBluetooth, so Tether learns pointers by name from the HID registry while
     // they are connected. Re-pairing changes a mouse's address but never its name. Reading the registry needs no permission.
@@ -69,7 +72,8 @@ final class Delegate: NSObject, NSApplicationDelegate {
         let known = known
         return (IOBluetoothDevice.pairedDevices() as? [IOBluetoothDevice] ?? []).filter {
             let n = $0.name ?? ""
-            return known.contains(n) || ["mouse", "trackpad"].contains { n.localizedCaseInsensitiveContains($0) }
+            let pointing = $0.deviceClassMajor == kBluetoothDeviceClassMajorPeripheral && $0.deviceClassMinor & 0x20 != 0 // classic only; BLE reports 0
+            return pointing || known.contains(n) || ["mouse", "trackpad"].contains { n.localizedCaseInsensitiveContains($0) }
         }
     }
 
@@ -102,12 +106,15 @@ final class Delegate: NSObject, NSApplicationDelegate {
         name = first.name ?? name
         if state != .missing { state = .connecting }
         // openConnection blocks for ~15s on a dead address, so each one runs on its own thread.
-        for address in all.compactMap(\.addressString) {
-            Thread.detachNewThread { _ = IOBluetoothDevice(addressString: address)?.openConnection() }
+        for address in all.compactMap(\.addressString) where Self.inFlight.withLock({ $0.insert(address).inserted }) {
+            Thread.detachNewThread {
+                _ = IOBluetoothDevice(addressString: address)?.openConnection()
+                Self.inFlight.withLock { _ = $0.remove(address) }
+            }
         }
         for _ in 0..<20 {
             try? await Task.sleep(for: .milliseconds(500))
-            if Self.connected != nil { state = .connected; return }
+            if let m = Self.connected { name = m.name ?? name; state = .connected; return }
         }
         state = .missing
     }
@@ -146,7 +153,6 @@ struct ContentView: View {
             .buttonBorderShape(.capsule)
             .controlSize(.extraLarge)
             .keyboardShortcut(.defaultAction)
-            .disabled(mouse.state == .connecting)
 
             Button("Close", action: quit)
                 .keyboardShortcut(.cancelAction)
@@ -197,7 +203,7 @@ struct ContentView: View {
         case .connected: "\(mouse.name) is ready to go."
         case .missing: "Turn \(mouse.name) off and on. Tether keeps trying."
         case .bluetoothOff: "Turn on Bluetooth to connect \(mouse.name)."
-        case .noMouse: "Pair your mouse once in Bluetooth settings. Tether remembers it after that."
+        case .noMouse: "Connect your mouse once while Tether is open, or pair it in Bluetooth settings. Tether remembers it after that."
         case .noAccess: "Let Tether use Bluetooth in Privacy & Security to reach your mouse."
         }
     }
@@ -211,7 +217,7 @@ struct ContentView: View {
     }
 
     private func primary() {
-        if mouse.state == .connected { return quit() }
+        if [.connected, .connecting].contains(mouse.state) { return quit() }
         let pane = mouse.state == .noAccess ? "com.apple.preference.security?Privacy_Bluetooth" : "com.apple.BluetoothSettings"
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:\(pane)")!)
     }
