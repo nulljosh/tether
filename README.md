@@ -4,7 +4,7 @@
 
 Your mouse dropped. Tether brings it back.
 
-<img src="docs/screenshots/connected.png" width="340" alt="Tether showing a connected mouse">
+<img src="docs/screenshots/tether-1.2.2.png" width="340" alt="Tether showing a connected mouse">
 
 It lives in the menu bar and catches every drop on its own. Lost the pointer anyway? Press Control Option Command M. It calls every saved copy of your mouse at once and tells you the second it's back. Return hides it.
 
