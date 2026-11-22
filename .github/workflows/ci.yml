@@ -2,8 +2,16 @@ name: ci
 # Every push and pull request: build the Mac app (signed ad-hoc, CI has no Developer ID), check the fonts, and check
 # that every file the landing links to exists. A notarized release is cut locally with ./build.sh release.
 on:
-  push: { branches: [main] }
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', 'architecture.svg']
   pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', 'architecture.svg']
+
+# A newer push makes the older run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   app:

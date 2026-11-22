@@ -48,4 +48,4 @@ No account. No analytics. No network. Tether reads the list of devices you alrea
 
 ## License
 
-MIT. Take it, change it, ship it.
+Apache 2.0. Take it, change it, ship it.
