@@ -6,7 +6,7 @@ Your mouse dropped. Tether brings it back.
 
 <img src="docs/screenshots/connected.png" width="340" alt="Tether showing a connected mouse">
 
-**[Download](https://github.com/nulljosh/tether/releases/latest/download/Tether.zip)** · [tether.jaybulb.com](https://tether.jaybulb.com) · macOS 26 or later
+[tether.jaybulb.com](https://tether.jaybulb.com) · macOS 26 or later
 
 Open it from Spotlight. It calls every saved copy of your mouse at once and tells you the second it's back. Return closes it. Leave it open and it catches the next drop too.
 
