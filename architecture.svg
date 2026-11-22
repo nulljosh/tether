@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Helvetica, Arial, sans-serif">
+  <style>
+    .box { fill: #f5f5f7; stroke: rgba(60,60,67,.18); }
+    .hot { fill: #16994a; }
+    .t { font-size: 15px; font-weight: 600; fill: #1d1d1f; }
+    .s { font-size: 12px; fill: #6e6e73; }
+    .w { font-size: 15px; font-weight: 600; fill: #fff; }
+    .ln { stroke: #6e6e73; stroke-width: 1.5; fill: none; marker-end: url(#a); }
+    @media (prefers-color-scheme: dark) {
+      .box { fill: #1c1c1e; stroke: rgba(84,84,88,.55); }
+      .t { fill: #f5f5f7; } .s { fill: rgba(235,235,245,.62); } .ln { stroke: rgba(235,235,245,.62); }
+    }
+  </style>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#6e6e73"/></marker></defs>
+
+  <rect class="box" x="20" y="110" width="170" height="80" rx="16"/>
+  <text class="t" x="105" y="146" text-anchor="middle">ContentView</text>
+  <text class="s" x="105" y="166" text-anchor="middle">one screen, keys only</text>
+
+  <rect class="hot" x="250" y="110" width="170" height="80" rx="16"/>
+  <text class="w" x="335" y="146" text-anchor="middle">Mouse</text>
+  <text class="s" x="335" y="166" text-anchor="middle" fill="#fff" style="fill:rgba(255,255,255,.8)">connect loop</text>
+
+  <rect class="box" x="480" y="30" width="170" height="70" rx="16"/>
+  <text class="t" x="565" y="61" text-anchor="middle">pairedDevices()</text>
+  <text class="s" x="565" y="80" text-anchor="middle">every "mouse" entry</text>
+
+  <rect class="box" x="480" y="200" width="170" height="70" rx="16"/>
+  <text class="t" x="565" y="231" text-anchor="middle">openConnection()</text>
+  <text class="s" x="565" y="250" text-anchor="middle">one thread per address</text>
+
+  <rect class="box" x="700" y="110" width="160" height="80" rx="16"/>
+  <text class="t" x="780" y="146" text-anchor="middle">isConnected()</text>
+  <text class="s" x="780" y="166" text-anchor="middle">polled every 0.5 s</text>
+
+  <path class="ln" d="M190 150 H246"/>
+  <path class="ln" d="M420 135 C450 120 450 70 476 66"/>
+  <path class="ln" d="M420 165 C450 180 450 230 476 234"/>
+  <path class="ln" d="M650 234 C680 230 690 200 712 192"/>
+  <path class="ln" d="M700 150 C560 150 560 150 424 150" stroke-dasharray="4 4"/>
+  <text class="s" x="560" y="142" text-anchor="middle">state</text>
+</svg>

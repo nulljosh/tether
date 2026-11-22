@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Tether. Your mouse, back in a second.</title>
+<meta name="description" content="When a Bluetooth mouse drops, the keyboard is all you have. Open Tether from Spotlight and it brings the mouse back. A free Mac app.">
+<meta property="og:title" content="Tether. Your mouse, back in a second.">
+<meta property="og:description" content="When a Bluetooth mouse drops, the keyboard is all you have. Open Tether from Spotlight and it brings the mouse back.">
+<meta property="og:image" content="https://tether.jaybulb.com/og.png">
+<meta property="og:url" content="https://tether.jaybulb.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://tether.jaybulb.com/">
+<link rel="stylesheet" href="tokens.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 var(--size-body)/1.42 var(--font); letter-spacing: -.011em; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 4px solid var(--accent-ring); outline-offset: 2px; border-radius: 8px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 var(--page); }
+.label { margin: 0 0 var(--s2); font-size: var(--size-footnote); font-weight: 600; color: var(--accent); letter-spacing: 0; }
+
+.nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: var(--s4); height: 56px; padding: 0 var(--page); background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--border); }
+.nav-brand { display: flex; align-items: center; gap: var(--s2); color: var(--text); font-weight: 600; }
+.nav-brand:hover { text-decoration: none; }
+.nav-end { display: flex; align-items: center; gap: var(--s5); font-size: var(--size-subhead); }
+.nav-end a:not(.btn) { color: var(--text2); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; height: var(--control); padding: 0 var(--s5); border-radius: var(--r-pill); font-size: var(--size-body); font-weight: 600; transition: transform .2s ease, background .2s ease; }
+.btn:hover { text-decoration: none; }
+.btn:active { transform: scale(.97); }
+.btn-solid { background: var(--accent); color: #fff; }
+.btn-ghost { background: var(--bg2); color: var(--text); }
+.nav .btn { height: 36px; padding: 0 var(--s4); font-size: var(--size-subhead); }
+
+/* Hero: the app itself, full bleed behind the copy. */
+.hero { position: relative; min-height: min(92vh, 860px); display: grid; place-items: center; overflow: hidden; isolation: isolate; }
+.hero-bg { position: absolute; inset: 0; z-index: -1; display: grid; place-items: center; opacity: .2; will-change: transform; -webkit-mask-image: radial-gradient(ellipse 60% 55% at center, #000 45%, transparent 100%); mask-image: radial-gradient(ellipse 60% 55% at center, #000 45%, transparent 100%); }
+.hero-bg .win h3, .hero-bg .win p { visibility: hidden; }
+.hero-bg .win { transform: scale(3.2); }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(var(--bg) 0, transparent 22%, transparent 70%, var(--bg) 100%); pointer-events: none; }
+.hero-copy { width: 100%; max-width: 860px; min-width: 0; text-align: center; padding: var(--s7) var(--page); will-change: transform, opacity; }
+.hero-h1 { margin: 0 auto var(--s4); max-width: 11ch; font-size: clamp(44px, 6.4vw, 88px); line-height: 1.02; font-weight: 700; letter-spacing: -.035em; }
+.lead { margin: 0 auto var(--s6); max-width: 30em; font-size: clamp(19px, 2vw, 22px); color: var(--text2); }
+.cta { display: flex; flex-wrap: wrap; gap: var(--s3); justify-content: center; }
+.fine { margin: var(--s4) 0 0; font-size: var(--size-footnote); color: var(--text2); }
+
+/* The Tether window, drawn the way the app draws it. */
+.win { --wbg: #ececec; --wline: rgba(0,0,0,.1); width: 340px; padding: 24px 32px 32px; border-radius: 16px; background: var(--wbg); border: 1px solid var(--wline); text-align: center; position: relative; }
+@media (prefers-color-scheme: dark) { .win { --wbg: #2a2a2c; --wline: rgba(255,255,255,.1); } }
+.lights { position: absolute; top: 12px; left: 12px; display: flex; gap: 8px; }
+.lights i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.disc { width: 96px; height: 96px; margin: 0 auto 20px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--tint) 14%, transparent); color: var(--tint); transition: background .3s ease, color .3s ease; }
+.disc svg { width: 44px; height: 44px; }
+.win[data-state="connecting"] { --tint: var(--text2); }
+.win[data-state="connected"] { --tint: var(--accent); }
+.win[data-state="connecting"] .disc svg { animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+.win .check { display: none; } .win[data-state="connected"] .check { display: block; } .win[data-state="connected"] .mouse { display: none; }
+.win h3 { margin: 0 0 6px; font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -.01em; }
+.win p { margin: 0 0 24px; min-height: 36px; font-size: 13px; line-height: 18px; color: var(--text2); }
+.win .done { height: 44px; border-radius: 999px; display: grid; place-items: center; font-size: 15px; font-weight: 600; background: var(--accent); color: #fff; transition: opacity .3s ease; }
+.win[data-state="connecting"] .done { background: color-mix(in srgb, var(--text) 10%, transparent); color: var(--text2); }
+
+.sec { padding: 112px 0; }
+.sec h2 { margin: 0 0 var(--s4); font-size: clamp(32px, 4.2vw, 48px); line-height: 1.08; font-weight: 700; letter-spacing: -.028em; }
+.sec .body { margin: 0; max-width: 34em; color: var(--text2); font-size: 19px; }
+.try { display: grid; grid-template-columns: 1fr auto; gap: var(--s7); align-items: center; }
+.try .demo { display: grid; justify-items: center; gap: var(--s4); }
+.try .hint { margin: 0; font-size: var(--size-footnote); color: var(--text2); }
+.cells { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s4); margin-top: var(--s7); }
+.cell { padding: var(--s6); border-radius: var(--r-card); background: var(--bg2); }
+.cell h3 { margin: 0 0 var(--s2); font-size: var(--size-title); line-height: 28px; letter-spacing: -.015em; }
+.cell p { margin: 0; color: var(--text2); }
+.get { text-align: center; }
+.get .body { margin: 0 auto var(--s6); }
+
+.foot { padding: var(--s7) 0 var(--s6); border-top: 1px solid var(--border); }
+.foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s6); }
+.foot-brand b { display: block; margin-top: var(--s2); }
+.foot-brand p { margin: 0; color: var(--text2); font-size: var(--size-subhead); }
+.foot-cols { display: flex; gap: var(--s7); font-size: var(--size-subhead); }
+.foot-cols div { display: grid; gap: var(--s2); align-content: start; }
+.foot-cols a { color: var(--text2); }
+.band { display: flex; justify-content: space-between; gap: var(--s5); margin: var(--s7) 0 var(--s5); color: color-mix(in srgb, var(--text) 9%, transparent); }
+.band svg { width: 100%; max-width: 120px; height: auto; flex: 1; }
+.legal { margin: 0; font-size: var(--size-footnote); color: var(--text2); }
+
+.reveal { opacity: 1; }
+.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.js .reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 760px) {
+  .nav-end a:not(.btn) { display: none; }
+  .try { grid-template-columns: 1fr; }
+  .cells { grid-template-columns: 1fr; }
+  .hero-bg .win { transform: scale(2.2); }
+  .foot-cols { gap: var(--s6); }
+  .band svg:nth-child(n+5) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="g-mouse" viewBox="0 0 1024 1024"><g stroke="currentColor" fill="none" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"><rect x="360" y="440" width="304" height="392" rx="152"/><path d="M512 440 V544"/><path d="M512 440 C512 330 640 330 640 220"/></g></symbol>
+  <symbol id="g-bare" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5v6c0 3.6 2.9 6.5 6.5 6.5s6.5-2.9 6.5-6.5V9c0-3.6-2.9-6.5-6.5-6.5Z"/></g><path d="M12 3v6" stroke="var(--wbg)" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="g-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="g-return" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="84" height="84" rx="18"/><path d="M68 30 V56 H32"/><path d="M42 46 32 56 42 66"/></g></symbol>
+  <symbol id="g-bt" viewBox="0 0 100 100"><path d="M34 32 66 62 50 78 V22 L66 38 34 68" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="g-wave" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="M30 34a28 28 0 0 0 0 32"/><path d="M70 34a28 28 0 0 1 0 32"/><path d="M18 24a44 44 0 0 0 0 52"/><path d="M82 24a44 44 0 0 1 0 52"/><circle cx="50" cy="50" r="6" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="g-switch" viewBox="0 0 100 100"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><rect x="14" y="32" width="72" height="36" rx="18"/><circle cx="68" cy="50" r="10" fill="currentColor" stroke="none"/></g></symbol>
+</svg>
+
+<template id="win">
+  <div class="win" data-state="connecting">
+    <div class="lights"><i></i><i></i><i></i></div>
+    <div class="disc"><svg class="mouse"><use href="#g-bare"/></svg><svg class="check"><use href="#g-check"/></svg></div>
+    <h3>Connecting</h3>
+    <p>Looking for Incase Ergonomic Mouse.</p>
+    <div class="done">Done</div>
+  </div>
+</template>
+
+<header class="nav" aria-label="Site">
+  <a class="nav-brand" href="#top" aria-label="Tether home"><img src="icon.svg" alt="" width="28" height="28"><span>Tether</span></a>
+  <nav class="nav-end" aria-label="Main">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a class="btn btn-solid" href="#get">Get Tether</a>
+  </nav>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true" inert data-win></div>
+  <div class="hero-copy">
+    <p class="label">Tether for Mac</p>
+    <h1 class="hero-h1">Your mouse, back in a second.</h1>
+    <p class="lead">When a Bluetooth mouse drops, the keyboard is all you have. Open Tether from Spotlight. It does the rest.</p>
+    <div class="cta">
+      <a class="btn btn-solid" href="#get">Get Tether</a>
+      <a class="btn btn-ghost" href="#how">See how it works</a>
+    </div>
+    <p class="fine">Free. Mac only. No account.</p>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap try">
+    <div class="reveal">
+      <p class="label">How it works</p>
+      <h2>Two keys. That's it.</h2>
+      <p class="body">Press Command Space, type Tether, press Return. It starts connecting the moment it opens. When the mouse is back, press Return again and it's gone.</p>
+    </div>
+    <div class="demo reveal">
+      <div data-win data-live></div>
+      <a class="btn btn-ghost" href="#how" id="drop" role="button">Drop the mouse</a>
+      <p class="hint">The real screen. Drop it and watch it come back.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="features" style="padding-top:0">
+  <div class="wrap">
+    <p class="label reveal">Features</p>
+    <h2 class="reveal">Built for the moment nothing else works.</h2>
+    <div class="cells">
+      <article class="cell reveal"><p class="label">Keyboard only</p><h3>No pointer needed</h3><p>Every button has a key. Return closes it. Escape too.</p></article>
+      <article class="cell reveal"><p class="label">Fast</p><h3>It never freezes</h3><p>Re-pairing leaves old copies of your mouse behind. Tether calls every one at once, so a dead one can't hold up the live one.</p></article>
+      <article class="cell reveal"><p class="label">Patient</p><h3>It keeps trying</h3><p>Leave it open and it watches. If the mouse drops again, Tether picks it right back up.</p></article>
+      <article class="cell reveal"><p class="label">Private</p><h3>Nothing leaves</h3><p>No account. No network. Tether only talks to the mouse you already paired.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec get" id="get" style="padding-top:0">
+  <div class="wrap">
+    <p class="label reveal">Get it</p>
+    <h2 class="reveal">One file. One build.</h2>
+    <p class="body reveal">Tether is open source. Clone it and run the build script. It needs macOS 26 and Xcode.</p>
+    <div class="cta reveal">
+      <a class="btn btn-solid" href="https://github.com/nulljosh/tether">Get it on GitHub</a>
+      <a class="btn btn-ghost" href="https://github.com/nulljosh/tether/blob/main/WHITEPAPER.md">Read the whitepaper</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand"><img src="icon.svg" alt="" width="40" height="40"><b>Tether</b><p>Your mouse, back in a second.</p></div>
+      <nav class="foot-cols" aria-label="Footer">
+        <div><p class="label">Tether</p><a href="#how">How it works</a><a href="#features">Features</a><a href="#get">Get it</a></div>
+        <div><p class="label">Source</p><a href="https://github.com/nulljosh/tether">GitHub</a><a href="https://github.com/nulljosh/tether/blob/main/WHITEPAPER.md">Whitepaper</a></div>
+        <div><p class="label">More</p><a href="mailto:trommatic@icloud.com?subject=Tether">Feedback</a><a href="https://jaybulb.com">More apps</a></div>
+      </nav>
+    </div>
+    <div class="band" aria-hidden="true">
+      <svg viewBox="0 0 1024 1024"><use href="#g-mouse"/></svg>
+      <svg viewBox="0 0 100 100"><use href="#g-return"/></svg>
+      <svg viewBox="0 0 100 100"><use href="#g-bt"/></svg>
+      <svg viewBox="0 0 100 100"><use href="#g-wave"/></svg>
+      <svg viewBox="0 0 100 100"><use href="#g-switch"/></svg>
+      <svg viewBox="0 0 1024 1024"><use href="#g-mouse"/></svg>
+    </div>
+    <p class="legal">&copy; 2026 Joshua Trommel &middot; MIT License</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var tpl = document.getElementById('win');
+  var wins = [].map.call(document.querySelectorAll('[data-win]'), function (slot) {
+    slot.appendChild(tpl.content.cloneNode(true));
+    return slot.querySelector('.win');
+  });
+  function set(win, state) {
+    win.dataset.state = state;
+    win.querySelector('h3').textContent = state === 'connected' ? 'Connected' : 'Connecting';
+    win.querySelector('p').textContent = state === 'connected' ? 'Incase Ergonomic Mouse is ready to go.' : 'Looking for Incase Ergonomic Mouse.';
+  }
+  // Hero loop: connecting, then connected, then again.
+  var hero = wins[0], live = wins[1], timer;
+  function cycle() { set(hero, 'connecting'); setTimeout(function () { set(hero, 'connected'); }, 1600); }
+  cycle(); if (!still) setInterval(cycle, 4800); else set(hero, 'connected');
+  // The demo: connects once on its own, then on every drop.
+  function drop(e) { if (e) e.preventDefault(); clearTimeout(timer); set(live, 'connecting'); timer = setTimeout(function () { set(live, 'connected'); }, 1400); }
+  drop();
+  document.getElementById('drop').addEventListener('click', drop);
+  // Parallax: the product drifts slower than the copy.
+  var bg = document.querySelector('.hero-bg'), copy = document.querySelector('.hero-copy');
+  if (!still) addEventListener('scroll', function () {
+    var y = scrollY, h = innerHeight;
+    bg.style.transform = 'translateY(' + y * .45 + 'px)';
+    copy.style.transform = 'translateY(' + y * .2 + 'px)';
+    copy.style.opacity = Math.max(0, 1 - y / (h * .7));
+  }, { passive: true });
+  // Fade up on scroll.
+  var items = document.querySelectorAll('.reveal');
+  if (still || !('IntersectionObserver' in window)) { items.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+  items.forEach(function (e) { io.observe(e); });
+})();
+</script>
+</body>
+</html>
