@@ -99,7 +99,7 @@ section { padding: 89px 21px 89px; }
 <body id="top">
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="g-mouse" viewBox="0 0 1024 1024"><g stroke="currentColor" fill="none" stroke-width="72" stroke-linecap="round" stroke-linejoin="round"><rect x="360" y="440" width="304" height="392" rx="152"/><path d="M512 440 V544"/><path d="M512 440 C512 330 640 330 640 220"/></g></symbol>
+  <symbol id="g-mouse" viewBox="0 0 1024 1024"><mask id="seam"><rect width="1024" height="1024" fill="white"/><path d="M512 440 V600" stroke="black" stroke-width="44" stroke-linecap="round"/></mask><rect x="352" y="440" width="320" height="392" rx="160" fill="currentColor" mask="url(#seam)"/><path d="M512 440 C512 330 640 330 640 220" stroke="currentColor" fill="none" stroke-width="72" stroke-linecap="round"/></symbol>
   <symbol id="g-fill" viewBox="0 0 24 24"><path d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5v6c0 3.6 2.9 6.5 6.5 6.5s6.5-2.9 6.5-6.5V9c0-3.6-2.9-6.5-6.5-6.5Z" fill="currentColor"/><path d="M12 3v6" stroke="var(--wbg)" stroke-width="1.6" stroke-linecap="round"/></symbol>
   <symbol id="g-check" viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="g-bt" viewBox="0 0 100 100"><path d="M32 32 66 64 50 80 V20 L66 36 32 68" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -116,7 +116,7 @@ section { padding: 89px 21px 89px; }
 </template>
 
 <header class="nav">
-  <a class="nav-brand" href="#top" aria-label="Tether home"><img src="icon.svg" alt="" width="28" height="28"><span>Tether</span></a>
+  <a class="nav-brand" href="#top" aria-label="Tether home"><img src="icon.svg?v=3" alt="" width="28" height="28"><span>Tether</span></a>
   <nav class="nav-end" aria-label="Main">
     <a href="#how">How it works</a>
     <a href="https://github.com/nulljosh/tether">GitHub</a>
@@ -155,7 +155,7 @@ section { padding: 89px 21px 89px; }
 
 <footer class="foot">
   <div class="foot-top">
-    <div class="foot-brand"><img src="icon.svg" alt="" width="40" height="40"><b>Tether</b><p>Your mouse, back in a second.</p></div>
+    <div class="foot-brand"><img src="icon.svg?v=3" alt="" width="40" height="40"><b>Tether</b><p>Your mouse, back in a second.</p></div>
     <nav class="foot-cols" aria-label="Footer">
       <div><p class="label">Tether</p><a href="#how">How it works</a><a href="#get">Get it</a></div>
       <div><p class="label">Source</p><a href="https://github.com/nulljosh/tether">GitHub</a><a href="https://github.com/nulljosh/tether/blob/main/WHITEPAPER.md">Whitepaper</a><a href="https://github.com/nulljosh/tether/blob/main/brand/BRAND.md">Brand kit</a></div>
