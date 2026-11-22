@@ -21,8 +21,8 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
   <key>CFBundleIconFile</key><string>Tether</string>
   <key>CFBundleIconName</key><string>Tether</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.0.0</string>
-  <key>CFBundleVersion</key><string>1</string>
+  <key>CFBundleShortVersionString</key><string>1.0.1</string>
+  <key>CFBundleVersion</key><string>2</string>
   <key>ATSApplicationFontsPath</key><string>Fonts</string>
   <key>LSMinimumSystemVersion</key><string>26.0</string>
   <key>NSBluetoothAlwaysUsageDescription</key><string>Tether uses Bluetooth to reconnect your mouse.</string>
@@ -54,5 +54,5 @@ asc notarization submit --file build/Tether.zip --wait --poll-interval 20s --tim
 xcrun stapler staple "$OUT"
 rm build/Tether.zip && ditto -c -k --keepParent "$OUT" build/Tether.zip
 spctl -a -vv "$OUT"
-gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later." --target "$(git rev-parse HEAD)" 2>/dev/null \
+gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later." --generate-notes --target "$(git rev-parse HEAD)" 2>/dev/null \
   || { [ -n "$REPLACE" ] && gh release upload "v$VERSION" build/Tether.zip --clobber; }

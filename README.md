@@ -1,6 +1,6 @@
 <img src="icon.svg" width="80" height="80" alt="Tether icon">
 
-![version](https://img.shields.io/badge/version-v1.0.0-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![macOS](https://img.shields.io/badge/macOS-26%2B-lightgrey)
+![version](https://img.shields.io/badge/version-v1.0.1-blue) ![license](https://img.shields.io/badge/license-MIT-green) ![macOS](https://img.shields.io/badge/macOS-26%2B-lightgrey)
 
 Your mouse dropped. Tether brings it back.
 
