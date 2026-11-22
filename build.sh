@@ -24,10 +24,11 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
   <key>CFBundleIconFile</key><string>Tether</string>
   <key>CFBundleIconName</key><string>Tether</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.1.0</string>
-  <key>CFBundleVersion</key><string>3</string>
+  <key>CFBundleShortVersionString</key><string>1.2.0</string>
+  <key>CFBundleVersion</key><string>4</string>
   <key>ATSApplicationFontsPath</key><string>Fonts</string>
   <key>LSMinimumSystemVersion</key><string>10.15</string>
+  <key>LSUIElement</key><true/>
   <key>NSBluetoothAlwaysUsageDescription</key><string>Tether uses Bluetooth to reconnect your mouse.</string>
 </dict></plist>
 EOF

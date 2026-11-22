@@ -5,9 +5,9 @@ Compared against ToothFairy, AirBuddy, AllMyBatteries and Bluetooth Battery Moni
 
 | Gap | Who has it | Size | Status |
 |---|---|---|---|
-| Global hotkey to reconnect without Spotlight (Carbon hotkey, no permission) | ToothFairy | S | todo |
-| Menu bar item: mouse state at a glance, Reconnect, Quit | ToothFairy, AirBuddy | M | todo |
-| Open at login (SMAppService), off by default | ToothFairy, AirBuddy | S | todo |
+| Global hotkey to reconnect without Spotlight (Carbon hotkey, no permission) | ToothFairy | S | done 1.2.0 (⌃⌥⌘M) |
+| Menu bar item: mouse state at a glance, Reconnect, Quit | ToothFairy, AirBuddy | M | done 1.2.0 |
+| Open at login (SMAppService), off by default | ToothFairy, AirBuddy | S | done 1.2.0 (macOS 13+) |
 | Pick the device: any paired mouse, trackpad or keyboard, not only names with "mouse" | ToothFairy, Bluetooth Battery Monitor | S | todo |
 | A quiet notification when it reconnects after a drop | AllMyBatteries, Bluetooth Battery Monitor | S | todo |
 | "Bluetooth is ready" status line | Bluetooth Battery Monitor | S | done (Bluetooth Is Off state) |

@@ -20,11 +20,11 @@ Tether calls every saved copy of the mouse at the same time. Each call gets its 
 
 Then it watches. Every half second it asks macOS one question: is any of these connected? The moment the answer is yes, the screen turns green.
 
-If the mouse drops again while Tether is open, it starts over on its own.
+Tether stays in the menu bar. If the mouse drops, Bluetooth tells Tether and it starts over on its own. If the mouse stays off for a while, it slows down to one try a minute so it isn't paging the radio all night.
 
 ## Built for no pointer
 
-Everything works from the keyboard. Command Space, type Tether, Return. It starts connecting the moment the window opens. Return closes it once the mouse is back. Escape closes it any time.
+Everything works from the keyboard. Control Option Command M from anywhere, or Command Space, type Tether, Return. It starts connecting the moment the window opens. Return closes it once the mouse is back. Escape closes it any time.
 
 If the mouse doesn't answer, Tether says what to do in plain words. Flip the switch underneath. Or press Return to open Bluetooth settings.
 

@@ -16,6 +16,8 @@ npx wrangler deploy     # landing
 ```
 
 ## How connecting works
+Tether is a menu bar app (LSUIElement, no Dock icon). Control Option Command M (Carbon hot key, no permission) or relaunching shows the window and reconnects now. Return and Escape hide the window; Quit is in the menu. Open at Login uses SMAppService (macOS 13+). While connected it watches with IOBluetooth's disconnect notification plus a 30 s fallback timer; after two minutes missing it backs off to one attempt a minute.
+
 Tether learns pointers by name: each tick it reads the HID registry for connected Bluetooth devices with usage mouse (1/2) or touchpad (0x0D/5) and saves their names in UserDefaults (`pointers`). BLE devices report no class of device to IOBluetooth, so this is the only reliable signal, and names survive a re-pair. Every paired device with a learned name, or "mouse"/"trackpad" in its name, gets `openConnection()` on its own thread, then the app polls `isConnected()` every 0.5 s for 10 s. Connected: it polls every 3 s and reconnects if the mouse drops. Missing: it tries again every 12 s or so.
 
 ## Gotchas
