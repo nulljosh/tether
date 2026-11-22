@@ -24,7 +24,7 @@ It knows your mouse. Any Bluetooth mouse or trackpad it sees connected, Tether r
 
 It keeps trying. Leave it open and it watches the mouse. If the mouse drops again, Tether picks it right back up.
 
-It tells you what to do. Mouse asleep? Flip the switch underneath. Bluetooth off? One key opens Bluetooth settings.
+It tells you what to do. Mouse asleep? Turn it off and on. Never paired, or Bluetooth off? One key opens the right settings.
 
 No account. No network. Nothing leaves your Mac.
 
