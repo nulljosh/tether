@@ -24,8 +24,8 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
   <key>CFBundleIconFile</key><string>Tether</string>
   <key>CFBundleIconName</key><string>Tether</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.2.1</string>
-  <key>CFBundleVersion</key><string>5</string>
+  <key>CFBundleShortVersionString</key><string>1.2.2</string>
+  <key>CFBundleVersion</key><string>6</string>
   <key>ATSApplicationFontsPath</key><string>Fonts</string>
   <key>LSMinimumSystemVersion</key><string>10.15</string>
   <key>LSUIElement</key><true/>

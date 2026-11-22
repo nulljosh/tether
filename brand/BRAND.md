@@ -3,7 +3,7 @@
 A mouse on a cord: Tether keeps your mouse tied to your Mac.
 
 ## The mark
-One bold flat white glyph on an accent gradient tile. No text, no outline, no emblem.
+A white Liquid Glass mouse and a dark glossy cord (mint in dark mode) on a green tile with two soft light bands. Three Icon Composer layers: Cord and Mouse are glass with shadows, Sweep is the flat light behind. No text.
 
 - `../Tether.icon` is the source of truth (Icon Composer). Light and dark fills are set in it.
 - `../icon.svg` is the flat copy for READMEs (shown at 80 px). `icon-1024.png` is the App Store icon, no alpha.
