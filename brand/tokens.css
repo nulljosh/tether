@@ -1,7 +1,10 @@
-/* Tether brand tokens. The accent is the only colour this app owns; spacing, radii and type come from the shared system. */
+/* Tether brand tokens. Blue is the only colour Tether owns; spacing, radii and type come from the shared system. */
 :root {
-  --accent: #0b66e4;
-  --accent-light: #4cb0ff;
-  --accent-deep: #0b66e4;
+  --accent: #0b66e4;       /* actions, links, the connected state */
+  --accent-light: #4cb0ff; /* icon gradient top, dark-mode accent */
+  --accent-deep: #0b66e4;  /* icon gradient bottom */
   --accent-ring: color-mix(in srgb, #0b66e4 30%, transparent);
+  --ink: #1d1d1f;          /* the cord: the one dark object, as in the icon */
+  --ink-dark: #cce6ff;     /* the cord in dark mode */
+  --sweep: .07;            /* the soft light bands behind a hero, as in the icon */
 }

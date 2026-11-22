@@ -14,8 +14,8 @@
   <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#6e6e73"/></marker></defs>
 
   <rect class="box" x="20" y="110" width="170" height="80" rx="16"/>
-  <text class="t" x="105" y="146" text-anchor="middle">ContentView</text>
-  <text class="s" x="105" y="166" text-anchor="middle">one screen, keys only</text>
+  <text class="t" x="105" y="146" text-anchor="middle">Controller</text>
+  <text class="s" x="105" y="166" text-anchor="middle">menu bar, window, hot key</text>
 
   <rect class="hot" x="250" y="110" width="170" height="80" rx="16"/>
   <text class="w" x="335" y="146" text-anchor="middle">Mouse</text>
@@ -23,15 +23,15 @@
 
   <rect class="box" x="480" y="30" width="170" height="70" rx="16"/>
   <text class="t" x="565" y="61" text-anchor="middle">pairedDevices()</text>
-  <text class="s" x="565" y="80" text-anchor="middle">every "mouse" entry</text>
+  <text class="s" x="565" y="80" text-anchor="middle">every learned pointer</text>
 
   <rect class="box" x="480" y="200" width="170" height="70" rx="16"/>
   <text class="t" x="565" y="231" text-anchor="middle">openConnection()</text>
   <text class="s" x="565" y="250" text-anchor="middle">one thread per address</text>
 
   <rect class="box" x="700" y="110" width="160" height="80" rx="16"/>
-  <text class="t" x="780" y="146" text-anchor="middle">isConnected()</text>
-  <text class="s" x="780" y="166" text-anchor="middle">polled every 0.5 s</text>
+  <text class="t" x="780" y="146" text-anchor="middle">Disconnect event</text>
+  <text class="s" x="780" y="166" text-anchor="middle">no polling while connected</text>
 
   <path class="ln" d="M190 150 H246"/>
   <path class="ln" d="M420 135 C450 120 450 70 476 66"/>

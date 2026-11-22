@@ -13,10 +13,11 @@
   // Each glyph is drawn white on a 100 unit square.
   var GLYPHS = [
     function (c) { // the mouse on its cord: the mark
-      c.lineWidth = 7; c.lineCap = 'round';
-      c.beginPath(); c.roundRect(33, 42, 34, 46, 17); c.stroke();
-      c.beginPath(); c.moveTo(50, 42); c.lineTo(50, 56); c.stroke();
-      c.beginPath(); c.moveTo(50, 42); c.bezierCurveTo(50, 28, 64, 28, 64, 12); c.stroke();
+      c.beginPath(); c.roundRect(32, 42, 36, 46, 18); c.fill(); // solid body, as in the icon
+      c.globalCompositeOperation = 'destination-out'; c.lineWidth = 4; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(50, 42); c.lineTo(50, 60); c.stroke();
+      c.globalCompositeOperation = 'source-over'; c.lineWidth = 7;
+      c.beginPath(); c.moveTo(50, 44); c.bezierCurveTo(50, 28, 64, 28, 64, 12); c.stroke();
     },
     function (c) { // the return key that closes it
       c.lineWidth = 7; c.lineCap = c.lineJoin = 'round';

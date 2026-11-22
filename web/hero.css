@@ -11,6 +11,11 @@
 .ground { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; will-change: transform; }
 .ground .win { transform: perspective(1200px) rotateX(38deg) scale(1.25); transform-origin: 50% 100%; margin-bottom: -72px; opacity: .85; }
 
+/* the icon's two soft light bands, in the accent, behind everything */
+.sweep { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--accent); stroke-linecap: round; opacity: .07; }
+.sweep path + path { opacity: .75; }
+@media (prefers-color-scheme: dark) { .sweep { stroke: var(--accent-light); opacity: .055; } }
+
 /* the sky: loose keycaps at three depths */
 .sky { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
        -webkit-mask-image: linear-gradient(#000 55%, transparent 85%); mask-image: linear-gradient(#000 55%, transparent 85%); }

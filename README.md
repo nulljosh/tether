@@ -8,6 +8,10 @@ Your mouse dropped. Tether brings it back.
 
 It lives in the menu bar and catches every drop on its own. Lost the pointer anyway? Press Control Option Command M. It calls every saved copy of your mouse at once and tells you the second it's back. Return hides it.
 
+## How it works
+
+<img src="architecture.svg" alt="How Tether connects: the menu bar and window drive one connect loop, which tries every paired address at once and listens for drops">
+
 ## Build
 
 `./build.sh` installs it. `./build.sh release` notarizes and publishes.

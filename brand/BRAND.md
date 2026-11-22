@@ -3,31 +3,34 @@
 A mouse on a cord: Tether keeps your mouse tied to your Mac.
 
 ## The mark
-A white Liquid Glass mouse and a dark glossy cord (light blue in dark mode) on a blue tile with two soft light bands. Three Icon Composer layers: Cord and Mouse are glass with shadows, Sweep is the flat light behind. No text.
+A white Liquid Glass mouse and a dark glossy cord on a blue tile, with two soft light bands behind. Two objects, two tones: the mouse is light, the cord is the one dark thing. In dark mode the cord turns light blue so it never disappears.
 
-- `../Tether.icon` is the source of truth (Icon Composer). Light and dark fills are set in it.
-- `../icon.svg` is the flat copy for READMEs (shown at 80 px). `icon-1024.png` is the App Store icon, no alpha.
-- `mark.svg` is the glyph alone in `currentColor` for your own background.
-- Clear space equal to the width of the glyph's thickest stroke. Smallest size 16 px.
+- `../Tether.icon` is the source of truth (Icon Composer). Three layers: Cord and Mouse are glass with shadows, Sweep is the flat light behind. Preview with `ictool Tether.icon --export-image ... --platform macOS`.
+- `../icon.svg` is the flat copy for READMEs (80 px), `icon-1024.png` the rendered 1024, `mark.svg` the glyph alone in `currentColor`.
+- Clear space equal to the cord's width. Smallest size 16 px.
 
 ## Colour
 | Role | Value |
 |---|---|
 | Accent | `#0b66e4` |
-| Gradient top | `#4cb0ff` |
+| Accent light (gradient top, dark-mode accent) | `#4cb0ff` |
+| Ink (the cord) | `#1d1d1f`, `#cce6ff` in dark mode |
 | Text | `#1d1d1f` light, `#f5f5f7` dark |
-| Background | `#ffffff` light, `#000000` dark |
-| Surface | `#f5f5f7` light, `#1c1c1e` dark |
+| Background | `#ffffff` light, warm black from the shared tokens dark |
+| Surface | `#f5f5f7` light, `#2a2a2c` dark |
 
-The accent is for actions, links and the icon. Never brown, beige, purple or teal.
+Blue is for actions, links, the connected state and the icon. Orange is only for a problem (mouse not answering, Bluetooth off). Never purple, never green again.
+
+## Motif: the light bands
+The icon's two soft bands are the one decoration Tether owns. On the web they sit behind the hero in the accent at 7 percent (`--sweep`), the same two curves as the icon. Nowhere else. No gradients on UI, no drop shadows on cards.
 
 ## Type
-The system font: `-apple-system, BlinkMacSystemFont, "SF Pro Text", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif`. Scale 34/41 bold, 22/28, 17/24, 15/20, 13/18.
+Tether Sans for text and Tether Display for headlines, both cut from Inter's text and display optical sizes (SF-style, proportional figures, OFL). `scripts/gen_font.py` makes them. The app falls back to the system font if they fail to load.
 
 ## Space and shape
-- Space on the 8 point grid: 4, 8, 12, 16, 24, 32, 48. Side margin 20. Reading column 680.
-- Radii: cards 28, grouped lists 20, controls fully round, icon 22 percent.
-- Controls are 48 points tall capsules, one height in a row. Focus is a 4 point ring at 30 percent accent.
-- Motion is 0.2 s ease and honours reduced motion.
+- The app: the shared 8 point grid. 96 point badge, 22 point title, 13 point detail, one full-width capsule button.
+- The landing: golden ratio. Type steps by phi (13, 16, 20, 26, 42, 68), space by Fibonacci (8, 13, 21, 34, 55, 89, 144).
+- Radii: windows 16, controls fully round, icon by Icon Composer.
+- Motion is short and honours reduced motion: the badge pulses while connecting, nothing else moves in the app.
 
-`tokens.css` holds the app's accent. Everything else comes from the shared token file.
+`tokens.css` holds Tether's own colours. Everything else comes from the shared jaybulb token file.
