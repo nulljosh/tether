@@ -21,7 +21,7 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
   <key>CFBundleIconFile</key><string>Tether</string>
   <key>CFBundleIconName</key><string>Tether</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.0</string>
+  <key>CFBundleShortVersionString</key><string>1.0.0</string>
   <key>CFBundleVersion</key><string>1</string>
   <key>ATSApplicationFontsPath</key><string>Fonts</string>
   <key>LSMinimumSystemVersion</key><string>26.0</string>
@@ -29,7 +29,14 @@ cat > "$OUT/Contents/Info.plist" <<'EOF'
 </dict></plist>
 EOF
 # Developer ID keeps the Bluetooth permission across rebuilds; ad-hoc asks again every build.
-codesign -f -o runtime --timestamp -s "Developer ID Application: Joshua Trommel (QMM486NPYC)" "$OUT"
+# CI has no signing identity, so it signs ad-hoc and stops before installing.
+ID="Developer ID Application: Joshua Trommel (QMM486NPYC)"
+if security find-identity -v -p codesigning | grep -q "$ID"; then
+  codesign -f -o runtime --timestamp -s "$ID" "$OUT"
+else
+  codesign -f -s - "$OUT"
+fi
+[ -n "$CI" ] && { echo "Built $OUT"; exit 0; }
 rm -rf "/Applications/Tether.app" "/Applications/Connect Mouse.app"
 cp -R "$OUT" "/Applications/Tether.app"
 echo "Installed /Applications/Tether.app"
@@ -41,4 +48,4 @@ asc notarization submit --file build/Tether.zip --wait --poll-interval 20s --tim
 xcrun stapler staple "$OUT"
 rm build/Tether.zip && ditto -c -k --keepParent "$OUT" build/Tether.zip
 spctl -a -vv "$OUT"
-gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later."
+gh release create "v$VERSION" build/Tether.zip --title "Tether $VERSION" --notes "Download Tether.zip, unzip, drag Tether to Applications. Signed and notarized. macOS 26 or later." || gh release upload "v$VERSION" build/Tether.zip --clobber

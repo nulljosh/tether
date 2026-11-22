@@ -1,0 +1,32 @@
+name: ci
+# Every push and pull request: build the Mac app (signed ad-hoc, CI has no Developer ID), check the fonts, and check
+# that every file the landing links to exists. A notarized release is cut locally with ./build.sh release.
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  app:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./build.sh
+      - run: codesign -v build/Tether.app && test -f build/Tether.app/Contents/Resources/Tether.icns
+
+  web:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q fonttools brotli && python3 scripts/gen_font.py --check
+      - name: Every local file the landing links to exists
+        run: |
+          python3 - <<'PY'
+          import os, re, sys
+          refs = re.findall(r'(?:href|src)="(?!https?:|mailto:|#)([^"?#]+)', open("web/index.html").read())
+          refs += re.findall(r'url\("([^"]+)"\)', open("web/fonts/fonts.css").read())
+          missing = [r for r in refs if not os.path.exists("web/" + r.lstrip("/"))]
+          print(f"{len(refs)} links, missing: {missing}")
+          sys.exit(1 if missing else 0)
+          PY

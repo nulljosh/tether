@@ -1,0 +1,24 @@
+name: deploy
+# Ships web/ to tether.jaybulb.com once ci passes on main. Manual until CLOUDFLARE_API_TOKEN (Workers Scripts: Edit)
+# and CLOUDFLARE_ACCOUNT_ID are repo secrets (the Pages-only token cannot deploy a Worker); then add back:
+#   workflow_run: { workflows: [ci], branches: [main], types: [completed] }
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ github.event.workflow_run.head_sha || github.sha }}" }
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
