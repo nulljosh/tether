@@ -374,8 +374,12 @@ final class Controller: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 }
 
-let app = NSApplication.shared
-let controller = Controller()
-app.delegate = controller
-app.setActivationPolicy(.accessory) // menu bar only, no Dock icon
-app.run()
+@main enum Main {
+    static let controller = Controller()
+    static func main() {
+        let app = NSApplication.shared
+        app.delegate = controller
+        app.setActivationPolicy(.accessory) // menu bar only, no Dock icon
+        app.run()
+    }
+}
