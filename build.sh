@@ -8,8 +8,8 @@ rm -rf build
 mkdir -p "$OUT/Contents/MacOS" "$OUT/Contents/Resources/Fonts"
 cp fonts/*.ttf fonts/OFL.txt "$OUT/Contents/Resources/Fonts/"
 # Universal: Apple silicon from macOS 11, Intel from 10.15 (the oldest with Swift and CBManager.authorization built in).
-swiftc -O -target arm64-apple-macos11.0 Tether.swift -o build/Tether-arm64
-swiftc -O -target x86_64-apple-macos10.15 Tether.swift -o build/Tether-x86_64
+swiftc -O -target arm64-apple-macos11.0 Tether.swift Pairer.swift -o build/Tether-arm64
+swiftc -O -target x86_64-apple-macos10.15 Tether.swift Pairer.swift -o build/Tether-x86_64
 lipo -create build/Tether-arm64 build/Tether-x86_64 -output "$OUT/Contents/MacOS/Tether"
 xcrun actool Tether.icon --compile "$OUT/Contents/Resources" --app-icon Tether --platform macosx \
   --minimum-deployment-target 10.15 --output-partial-info-plist build/icon.plist >/dev/null

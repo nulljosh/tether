@@ -20,6 +20,8 @@ final class Mouse: NSObject {
     private var polls = 0 // half-second polls left in the current attempt
     private var attempting = false
     private var missingSince: Date?
+    private var lastPair = Date.distantPast
+    private var pairTries = 0
     private var timer: Timer?
     private var watch: IOBluetoothUserNotification?
     private let defaults = UserDefaults.standard
@@ -49,6 +51,8 @@ final class Mouse: NSObject {
             name = m.name ?? name
             polls = 0; attempting = false; missingSince = nil
             if watch == nil { watch = m.register(forDisconnectNotification: self, selector: #selector(dropped(_:device:))) }
+            Pairer.askOnce() // ask for Accessibility while there is still a mouse to click Allow with
+            pairTries = 0
             set(.connected)
             return after(30) // the disconnect notification does the real watching; this is the fallback
         }
@@ -57,6 +61,11 @@ final class Mouse: NSObject {
             attempting = false
             if missingSince == nil { missingSince = Date() }
             set(.missing)
+            // A dead address usually means the mouse lost its bond and is advertising under a new one: pair it from Settings.
+            if Date().timeIntervalSince(missingSince!) > 15, Date().timeIntervalSince(lastPair) > 40 {
+                lastPair = Date(); pairTries += 1
+                Pairer.pair(names: known.union(mice().compactMap { $0.name }), nth: pairTries)
+            }
             // Mouse switched off for the night: stop paging the radio every few seconds after two minutes.
             return after(Date().timeIntervalSince(missingSince!) > 120 ? 60 : 2)
         }

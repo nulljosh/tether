@@ -23,7 +23,7 @@ Tether learns pointers by name: each tick it reads the HID registry for connecte
 ## Gotchas
 - `openConnection()` blocks about 15 s on a dead address. Never call it on the main thread or in sequence. The old AppleScript froze doing exactly that.
 - The Incase mouse changes address each time it is re-paired, so stale entries pile up in Bluetooth settings. Tether tries them all. Clean them up with Forget This Device in Settings; `blueutil --unpair` does nothing for BLE.
-- Tether cannot pair a new mouse. BLE pairing needs the Settings Nearby Devices row (see the `mouse` skill).
+- A mouse that lost its bond comes back under a new address that no public API can pair. After 15 s missing, `Pairer` opens Bluetooth settings and clicks Connect on the Nearby row with real HID events (needs Accessibility, asked for once while connected). It tries a different Nearby row each time because the mouse can show up twice.
 - States: connecting, connected, missing, noMouse (nothing learned or paired yet), bluetoothOff, noAccess (`CBManager.authorization` denied).
 - BLE mouse battery is not exposed in ioreg or system_profiler, so the app does not show it.
 - The Bluetooth permission is tied to the signature. `build.sh` signs with the Developer ID so the grant survives rebuilds. Ad-hoc signing asks again every build, and a user with no mouse cannot click Allow.
