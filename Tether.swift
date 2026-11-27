@@ -138,7 +138,11 @@ final class Mouse: NSObject {
         }
     }
 
-    private func connected() -> IOBluetoothDevice? { mice().first { $0.isConnected() } }
+    // isConnected() reads false for a BLE mouse macOS connected itself, so the HID registry has the last word.
+    private func connected() -> IOBluetoothDevice? {
+        let all = mice(), live = connectedPointerNames()
+        return all.first { $0.isConnected() } ?? all.first { live.contains($0.name ?? "") }
+    }
 }
 
 // MARK: - The screen
