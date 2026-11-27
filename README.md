@@ -1,6 +1,6 @@
 <img src="icon.svg" width="80" height="80" alt="Tether icon">
 
-![version](https://img.shields.io/badge/version-v1.2.2-blue) ![license](https://img.shields.io/badge/license-Apache%202.0-green) ![macOS](https://img.shields.io/badge/macOS-10.15%2B-lightgrey) [![ci](https://github.com/nulljosh/tether/actions/workflows/ci.yml/badge.svg)](https://github.com/nulljosh/tether/actions/workflows/ci.yml)
+![version](https://img.shields.io/badge/version-v1.2.3-blue) ![license](https://img.shields.io/badge/license-Apache%202.0-green) ![macOS](https://img.shields.io/badge/macOS-10.15%2B-lightgrey) [![ci](https://github.com/nulljosh/tether/actions/workflows/ci.yml/badge.svg)](https://github.com/nulljosh/tether/actions/workflows/ci.yml)
 
 Your mouse dropped. Tether brings it back.
 
